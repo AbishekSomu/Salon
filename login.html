@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="logincss.css">
+    <title>
+        Saloon
+    </title>
+    <script>
+       const customerCredentials = {
+            "717822p210": "darshaan",
+            "717822p217": "kelt",
+        };
+        const usercredentials ={
+            "717822p202" : "abishek",
+        };
+
+            f
+function checklogin() {
+    let input_username = document.getElementById("username").value;
+    let input_password = document.getElementById("password").value;
+
+    console.log("Username entered:", input_username);
+    console.log("Password entered:", input_password);
+
+    if (customerCredentials[input_username] && customerCredentials[input_username] === input_password) {
+        console.log("Redirecting to homepage...");
+        window.location.href = "homepage.html"; // Redirect for customers
+    } 
+    
+    else if (usercredentials[input_username] && usercredentials[input_username] === input_password) {
+        console.log("Redirecting to user page...");
+        window.location.href = "admin dashboard.html"; // Redirect for users
+    } 
+    else {
+        alert("Login Failed!"); // Alert for failed login
+    }
+}
+    </script>
+</head>
+<body>
+    <div class="login-container">
+    <form>
+    <label for="username">Username:</label>
+    <input type="text" class="login-input" id="username" name="username" required placeholder="Username"><br><br>
+    <label for="password">Password:</label>
+    <input type="password" class="login-input" id="password" name="password" placeholder="Password" required><br><br>
+    <input class="login-button" id="myBtn"type="button" value="Submit" onclick="checklogin()">
+    <input type="checkbox">Remember Me <div class="tab1"></div><a href="">Forgot password</a><br>
+    <div class="tab2"></div> <a href="">New?Register</a>
+    </div>
+    </form>
+</body>

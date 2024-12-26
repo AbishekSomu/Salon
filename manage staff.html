@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Staff</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="navbar">
+        <h1>Manage Staff</h1>
+        <ul>
+            <li><a href="admin dashboard.html">Admin Dashboard</a></li>
+        </ul>
+    </div>
+    <div class="content">
+        <h2>Manage Your Staff</h2>
+        <p>Here you can add, edit, or remove staff members in the salon.</p>
+
+        <input type="text" id="staff-name" placeholder="Enter staff name" />
+        <button id="add-staff">Add Staff</button>
+
+        <input type="text" id="remove-name" placeholder="Enter name to remove" />
+        <button id="remove-staff">Remove Staff</button>
+
+        <div id="staff-list">
+            <h3>Staff Members</h3>
+            <ul id="staff-ul">
+                <li>Darshaan - Hair Stylist</li>
+                <li>Abishek - Nail Technician</li>
+                <li>Ajmal - Barber</li>
+                <li>Ragavendar - Esthetician</li>
+                <li>Arun - Makeup Artist</li>
+                <li>Khan - Massage Therapist</li>
+                <li>Harish - Receptionist</li>
+            </ul>
+        </div>
+
+
+    <script>
+        // Add staff logic
+        document.getElementById('add-staff').addEventListener('click', function() {
+            const staffName = document.getElementById('staff-name').value;
+            if (staffName) {
+                const staffList = document.getElementById('staff-ul');
+                const newStaffItem = document.createElement('li');
+                newStaffItem.textContent = staffName;
+                staffList.appendChild(newStaffItem);
+                document.getElementById('staff-name').value = '';
+            } else {
+                alert('Please enter a staff name.');
+            }
+        });
+
+        // Remove staff logic
+        document.getElementById('remove-staff').addEventListener('click', function() {
+            const removeName = document.getElementById('remove-name').value;
+            const staffList = document.getElementById('staff-ul');
+            const staffItems = staffList.getElementsByTagName('li');
+            let found = false;
+
+            for (let i = 0; i < staffItems.length; i++) {
+                if (staffItems[i].textContent === removeName) {
+                    staffList.removeChild(staffItems[i]);
+                    found = true;
+                    break;
+                }
+            }
+
+            if (found) {
+                document.getElementById('remove-name').value = '';
+            } else {
+                alert('Staff member not found.');
+            }
+        });
+
+        // Load appointments from localStorage
+        function loadAppointments() {
+            const appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+            const appointmentList = document.getElementById('appointment-ul');
+
+            if (appointments.length > 0) {
+                appointments.forEach(appointment => {
+                    const appointmentItem = document.createElement('li');
+                    appointmentItem.textContent = `${appointment.customerName} - ${appointment.selectedService} on ${appointment.selectedDate} at ${appointment.selectedTime}`;
+                    appointmentList.appendChild(appointmentItem);
+                });
+            } else {
+                const noAppointments = document.createElement('li');
+                noAppointments.textContent = 'No appointments found.';
+                appointmentList.appendChild(noAppointments);
+            }
+        }
+
+        // Initialize the page by loading appointments
+        document.addEventListener('DOMContentLoaded', loadAppointments);
+    </script>
+</body>
+</html>

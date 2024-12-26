@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="homepagecss.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome customer</title>
+</head>
+<body>
+    <div class="content">
+        <h1>Book Appointment</h1>
+        <h2>Fill in the details below</h2>
+
+        <label for="customer-name">Your Name:</label>
+        <input type="text" id="customer-name" placeholder="Enter your name" />
+
+        <label for="selected-service">Select Service:</label>
+        <select id="selected-service">
+            <option value="Haircut">Haircut</option>
+            <option value="Shave">Shave</option>
+            <option value="Massage">Massage</option>
+            <option value="Facial">Facial</option>
+            <option value="Nail Treatment">Nail Treatment</option>
+        </select>
+
+        <label for="appointment-date">Choose Date:</label>
+        <input type="date" id="appointment-date">
+
+        <label for="appointment-time">Choose Time:</label>
+        <input type="time" id="appointment-time">
+
+        <button id="book-appointment">Book Appointment</button>
+        
+        <div id="confirmation"></div>
+    </div>
+
+    <script>
+        const staffMembers = [
+            'Darshaan', 'Abishek', 'Ajmal', 'Ragavendar', 'Arun', 'Khan', 'Harish'
+        ];
+
+        const appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+
+        function isStaffAvailable(staffMember, selectedDate, selectedTime) {
+            return !appointments.some(appointment =>
+                appointment.staffMember === staffMember &&
+                appointment.selectedDate === selectedDate &&
+                appointment.selectedTime === selectedTime
+            );
+        }
+
+        function assignStaff(selectedDate, selectedTime) {
+            for (let i = 0; i < staffMembers.length; i++) {
+                if (isStaffAvailable(staffMembers[i], selectedDate, selectedTime)) {
+                    return staffMembers[i];
+                }
+            }
+            return null;
+        }
+
+        document.getElementById('book-appointment').addEventListener('click', function() {
+            const customerName = document.getElementById('customer-name').value;
+            const selectedService = document.getElementById('selected-service').value;
+            const selectedDate = document.getElementById('appointment-date').value;
+            const selectedTime = document.getElementById('appointment-time').value;
+
+            if (!customerName || !selectedDate || !selectedTime) {
+                alert('Please fill out all fields.');
+                return;
+            }
+
+            const assignedStaff = assignStaff(selectedDate, selectedTime);
+            if (assignedStaff === null) {
+                alert('No staff member is available at the selected time.');
+                return;
+            }
+
+            const newAppointment = {
+                customerName: customerName,
+                selectedService: selectedService,
+                selectedDate: selectedDate,
+                selectedTime: selectedTime,
+                staffMember: assignedStaff
+            };
+
+            appointments.push(newAppointment);
+            localStorage.setItem('appointments', JSON.stringify(appointments));
+
+            // Show confirmation message
+            document.getElementById('confirmation').innerHTML = 
+                `<p>Your appointment is booked at ${selectedTime}.</p>`;
+
+            document.getElementById('customer-name').value = '';
+            document.getElementById('appointment-date').value = '';
+            document.getElementById('appointment-time').value = '';
+        });
+    </script>
+</body>
+</html>

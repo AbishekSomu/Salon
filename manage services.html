@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Services</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="navbar">
+        <h1>Manage Services</h1>
+        <ul>
+            <li><a href="admin dashboard.html">Admin Dashboard</a></li>
+        </ul>
+    </div>
+    <div class="content">
+        <h2>Manage Your Services</h2>
+        <p>Here you can add, edit, or remove services offered in the salon.</p>
+        
+        <h3>Staff Appointments</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Customer Name</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Service</th>
+                    <th>Staff Member</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="appointments-body">
+                <!-- Appointments will be dynamically loaded here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+            const appointmentsBody = document.getElementById('appointments-body');
+            const completedAppointments = [];
+
+            if (appointments.length === 0) {
+                const noAppointmentsRow = document.createElement('tr');
+                noAppointmentsRow.innerHTML = `<td colspan="6">No appointments found.</td>`;
+                appointmentsBody.appendChild(noAppointmentsRow);
+            } else {
+                // Populate appointments
+                appointments.forEach((appointment, index) => {
+                    const row = createAppointmentRow(appointment, index);
+                    appointmentsBody.appendChild(row);
+                });
+            }
+
+            function createAppointmentRow(appointment, index) {
+                const row = document.createElement('tr');
+                row.setAttribute('data-index', index);
+
+                row.innerHTML = `
+                    <td>${appointment.customerName}</td>
+                    <td>${appointment.selectedDate}</td>
+                    <td>${appointment.selectedTime}</td>
+                    <td>${appointment.selectedService}</td>
+                    <td>${appointment.staffMember}</td>
+                    <td><button class="completed-btn">Completed</button></td>
+                `;
+
+                row.querySelector('.completed-btn').addEventListener('click', function() {
+                    completeAppointment(row, appointment);
+                });
+
+                return row;
+            }
+
+            function completeAppointment(row, appointment) {
+                row.querySelectorAll('td').forEach(cell => {
+                    cell.style.textDecoration = 'line-through';
+                });
+
+                // Move row to the bottom of the table
+                appointmentsBody.removeChild(row);
+                appointmentsBody.appendChild(row);
+
+                // Save completed appointment
+                completedAppointments.push(appointment);
+            }
+        });
+    </script>
+</body>
+</html>
